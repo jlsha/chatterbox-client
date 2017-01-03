@@ -36,7 +36,7 @@
       $.ajax({
         url: app.server,
         type: 'GET',
-        data: 'order=-createdAt', 
+        //data: 'order=-createdAt', 
         success: (data) => {
           app.renderMessage(data);
           console.log('chatterbox: Message got', data);
@@ -62,12 +62,23 @@
     renderMessage: (message) => {
       let $message = $('<div></div>');
       $('#chats').append($message);
-      message.results.forEach((eachMessage) => {
+      console.log(message);
+      if (message.hasOwnProperty('results')) {        
+      //for (var i = 0; i < message.results.length; i++) {
+        //let eachMessage = message.results[i];
+        message.results.forEach((eachMessage) => {
+          let $eachMessage = $('<div class="each-message"></div>');
+          $eachMessage.append('<div class=username>' + eachMessage.username + ' :</div>');
+          $eachMessage.append('<div>' + eachMessage.text + '</div>');
+          $message.append($eachMessage);
+        });
+      } else {
         let $eachMessage = $('<div class="each-message"></div>');
-        $eachMessage.append('<div class=username>' + eachMessage.username + ' :</div>');
-        $eachMessage.append('<div>' + eachMessage.text + '</div>');
+        $eachMessage.append('<div class=username>' + message.username + ' :</div>');
+        $eachMessage.append('<div>' + message.text + '</div>');
         $message.append($eachMessage);
-      });
+      }
+      //}
     },
 
     renderRoom: (room) => {
