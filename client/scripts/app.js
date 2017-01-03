@@ -64,7 +64,7 @@
       $('#chats').append($message);
       message.results.forEach((eachMessage) => {
         let $eachMessage = $('<div class="each-message"></div>');
-        $eachMessage.append('<div class=username>' + eachMessage.username + '</div>');
+        $eachMessage.append('<div class=username>' + eachMessage.username + ' :</div>');
         $eachMessage.append('<div>' + eachMessage.text + '</div>');
         $message.append($eachMessage);
       });
@@ -92,6 +92,8 @@
         };
 
         app.send(messageObj);
+        app.clearMessages();
+        app.fetch();
       });
     }
   };

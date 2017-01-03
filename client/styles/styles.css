@@ -103,3 +103,7 @@ select {
 .each-message:nth-child(odd) {
   background-color: lightgrey;
 }
+
+.username {
+  font-weight: bold;
+}
