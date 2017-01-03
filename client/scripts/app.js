@@ -30,8 +30,9 @@
       $.ajax({
         url: url,
         type: 'GET',
+        data: 'order=-createdAt', 
         success: (data) => {
-          app.renderMessage(data);
+          app.renderMessage.bind(data);
           console.log('chatterbox: Message got', data);
         },
         error: (err) => {
@@ -46,6 +47,7 @@
     },
 
     renderMessage: (message) => {
+      console.log(message);
       let $message = $('<div></div>');
       $('#chats').append($message);
       $message.append('<div class=username>' + message.username + '</div>');
