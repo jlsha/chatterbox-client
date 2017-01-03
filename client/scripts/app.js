@@ -2,8 +2,11 @@
   let app = {
     init: () => {
       let getUserName = () => {
-        
+        return userName = prompt().val();
       };
+
+      app.fetch('https://api.parse.com/1/classes/messages');
+
     },
     
     send: (message) => {
@@ -23,11 +26,12 @@
       });
     },
     
-    fetch: () => {
+    fetch: (url) => {
       $.ajax({
-    // This is the url you should use to communicate with the parse API server.
+        url: url,
         type: 'GET',
         success: (data) => {
+          app.renderMessage(data);
           console.log('chatterbox: Message got', data);
         },
         error: (err) => {
@@ -64,7 +68,7 @@
         console.log(roomName);
 
         let messageObj = {
-          username: 'Jen',
+          username: userName,
           text: message,
           roomname: roomName
         };
