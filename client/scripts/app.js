@@ -1,18 +1,24 @@
 
+  let userName = window.location.search.replace(/\D\username\D/, '');
   let app = {
-    init: () => {
-      let getUserName = () => {
-        return userName = prompt().val();
-      };
+    server: 'https://api.parse.com/1/classes/messages',
 
-      app.fetch('https://api.parse.com/1/classes/messages');
+    init: () => {
+      app.fetch();
+      app.handleSubmit();
+      app.clearMessages();
+      app.handleUsernameClick();
+      app.getMessage();
+      $('#clear-messages').on('click', () => {
+        app.clearMessages(); 
+      });
+
 
     },
-    
     send: (message) => {
       $.ajax({
     // This is the url you should use to communicate with the parse API server.
-        url: 'https://api.parse.com/1/classes/messages',
+        url: app.server,
         type: 'POST',
         data: JSON.stringify(message),
         contentType: 'application/json',
@@ -26,13 +32,13 @@
       });
     },
     
-    fetch: (url) => {
+    fetch: () => {
       $.ajax({
-        url: url,
+        url: app.server,
         type: 'GET',
         data: 'order=-createdAt', 
         success: (data) => {
-          app.renderMessage.bind(data);
+          app.renderMessage(data);
           console.log('chatterbox: Message got', data);
         },
         error: (err) => {
@@ -46,12 +52,22 @@
       $('#chats').empty();
     },
 
+    getMessage: () => {
+      $('#get-messages').on('click', () => {
+        $('#chats').empty();
+        app.fetch();
+      });
+    },
+
     renderMessage: (message) => {
-      console.log(message);
       let $message = $('<div></div>');
       $('#chats').append($message);
-      $message.append('<div class=username>' + message.username + '</div>');
-      $message.append('<div>' + message.text + '</div>');
+      message.results.forEach((eachMessage) => {
+        let $eachMessage = $('<div class="each-message"></div>');
+        $eachMessage.append('<div class=username>' + eachMessage.username + '</div>');
+        $eachMessage.append('<div>' + eachMessage.text + '</div>');
+        $message.append($eachMessage);
+      });
     },
 
     renderRoom: (room) => {
@@ -80,7 +96,9 @@
     }
   };
 
-  app.init();
+  $(document).ready(function() {
+    app.init();
+  });
 
 
 
