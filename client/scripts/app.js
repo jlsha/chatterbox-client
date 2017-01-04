@@ -2,13 +2,16 @@
   let userName = window.location.search.replace(/\D\username\D/, '');
   let app = {
     server: 'https://api.parse.com/1/classes/messages',
+    messages: [],
+    friends: {},
 
     init: () => {
+      
       app.fetch();
       app.handleSubmit();
       app.clearMessages();
-      app.handleUsernameClick();
       app.getMessage();
+      app.handleUsernameClick();
       $('#clear-messages').on('click', () => {
         app.clearMessages(); 
       });
@@ -38,6 +41,7 @@
         type: 'GET',
         data: 'order=-createdAt', 
         success: (data) => {
+          app.messages = data.results;
           app.renderMessage(data);
           console.log('chatterbox: Message got', data);
         },
@@ -65,7 +69,7 @@
       if (message.hasOwnProperty('results')) {
         message.results.forEach((eachMessage) => {
           let $eachMessage = $('<div class="each-message"></div>');
-          $eachMessage.append('<div class="username">' + eachMessage.username + ' :</div>');
+          $eachMessage.append(`<div class="username">${eachMessage.username} :</div>`);
           let $messagetext = $('<div class="message"></div>');
           $messagetext.text(`${eachMessage.text}`);
           $message.append($eachMessage);
@@ -78,6 +82,14 @@
         $('#message').text(`${message.text}`);
         $message.append($eachMessage);
       }
+      app.filterUserMessage();
+    },
+
+    filterUserMessage: () => {
+      $('.each-message').on('click', 'div.username', (e) => {
+
+        console.log(e.target.innerText);
+      });
     },
 
     renderRoom: (room) => {
@@ -91,16 +103,16 @@
     handleSubmit: () => {
       $('#submit').on('click', function(event) {
         let message = $('#input-text').val();
-        console.log(message);
         let roomName = $('#room-text').val();
-        console.log(roomName);
 
         let messageObj = {
           username: userName,
           text: message,
           roomname: roomName
         };
-
+        
+        $('#input-text').val('');
+        $('#room-text').val('');
         app.send(messageObj);
         app.clearMessages();
         app.fetch();
