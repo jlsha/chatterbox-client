@@ -36,7 +36,7 @@
       $.ajax({
         url: app.server,
         type: 'GET',
-        //data: 'order=-createdAt', 
+        data: 'order=-createdAt', 
         success: (data) => {
           app.renderMessage(data);
           console.log('chatterbox: Message got', data);
@@ -62,23 +62,22 @@
     renderMessage: (message) => {
       let $message = $('<div></div>');
       $('#chats').append($message);
-      console.log(message);
-      if (message.hasOwnProperty('results')) {        
-      //for (var i = 0; i < message.results.length; i++) {
-        //let eachMessage = message.results[i];
+      if (message.hasOwnProperty('results')) {
         message.results.forEach((eachMessage) => {
           let $eachMessage = $('<div class="each-message"></div>');
-          $eachMessage.append('<div class=username>' + eachMessage.username + ' :</div>');
-          $eachMessage.append('<div>' + eachMessage.text + '</div>');
+          $eachMessage.append('<div class="username">' + eachMessage.username + ' :</div>');
+          let $messagetext = $('<div class="message"></div>');
+          $messagetext.text(`${eachMessage.text}`);
           $message.append($eachMessage);
+          $eachMessage.append($messagetext);
         });
       } else {
         let $eachMessage = $('<div class="each-message"></div>');
         $eachMessage.append('<div class=username>' + message.username + ' :</div>');
-        $eachMessage.append('<div>' + message.text + '</div>');
+        $eachMessage.append('<div id="messagege"></div>');
+        $('#message').text(`${message.text}`);
         $message.append($eachMessage);
       }
-      //}
     },
 
     renderRoom: (room) => {
